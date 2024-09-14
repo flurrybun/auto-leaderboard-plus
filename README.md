@@ -1,23 +1,21 @@
-# auto-leaderboard+
-This is where she makes a mod.
+# AutoLeaderboard+
 
-<img src="logo.png" width="150" alt="the mod's logo" />
+This is a [Geometry Dash](https://store.steampowered.com/app/322170/Geometry_Dash/) mod made with [Geode](https://geode-sdk.org/). After installing Geode, search for this mod in the in-game mod browser and click install.
 
-*Update logo.png to change your mod's icon (please)*
+By default, leaderboard stats are only updated when viewing the level's leaderboard. This mod automatically updates leaderboard stats whenever adding a new best.
 
-## Getting started
-We recommend heading over to [the getting started section on our docs](https://docs.geode-sdk.org/getting-started/) for useful info on what to do next.
+This is an improved version of the AutoLeaderboard mod by M336.
 
-## Build instructions
-For more info, see [our docs](https://docs.geode-sdk.org/getting-started/create-mod#build)
-```sh
-# Assuming you have the Geode CLI set up already
-geode build
-```
+## Improvements
 
-# Resources
-* [Geode SDK Documentation](https://docs.geode-sdk.org/)
-* [Geode SDK Source Code](https://github.com/geode-sdk/geode/)
-* [Geode CLI](https://github.com/geode-sdk/cli)
-* [Bindings](https://github.com/geode-sdk/bindings/)
-* [Dev Tools](https://github.com/geode-sdk/DevTools)
+AutoLeaderboard simply opens the leaderboard menu offscreen whenever viewing the level page, which has a few drawbacks:
+
+- Causes lag when viewing a level page with a full leaderboard
+- Sometimes doesn't properly update leaderboard stats, due to them being cached
+- Leaderboard stats are only updating when viewing the level page
+
+AutoLeaderboard+ fixes these issues:
+
+- No more lag
+- Always updates leaderboard stats, no matter what
+- Leaderboard stats are updated as soon as you get a new best
