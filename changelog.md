@@ -1,3 +1,7 @@
-# 1.0.0
+## 1.0.1
 
-- Initial commit
+- Fix platformer levels not uploading leaderboard stats
+
+## 1.0.0
+
+- Initial version
