@@ -10,6 +10,8 @@
     "name": "AutoLeaderboard+",
     "version": "v1.0.2",
     "developer": "NinKaz",
-    "description": "Automatically update leaderboard stats - improved!",
-    "repository": "https://github.com/flurrybun/auto-leaderboard-plus"
+    "description": "Auto-update leaderboard stats - improved!",
+    "links": {
+        "source": "https://github.com/flurrybun/auto-leaderboard-plus"
+    }
 }
