@@ -16,11 +16,11 @@ class $modify(ModGJGameLevel, GJGameLevel) {
         // using weekly should cut down the amount of data fetched
         // might help mobile players on cell service but probably doesn't matter
 
-        // if you use LevelLeaderboardMode::Points and beat a platformer level that doesn't have points,
-        // gd's servers don't upload your time to the leaderboard
+        // gd only updates whatever stat is fetched, so we have to call getLevelLeaderboard twice for platformer levels
         glm->getLevelLeaderboard(static_cast<GJGameLevel*>(this), LevelLeaderboardType::Weekly, LevelLeaderboardMode::Time);
+        if (isPlatformer()) glm->getLevelLeaderboard(static_cast<GJGameLevel*>(this), LevelLeaderboardType::Weekly, LevelLeaderboardMode::Points);
 
-        // getLevelLeaderboard automatically sets the mode and type to whatever is passed into it, so we have to reset it
+        // getLevelLeaderboard automatically sets the mode and type to whatever was passed into it, so we have to reset it
         gm->setIntGameVariable("0098", leaderboardType);
         gm->setIntGameVariable("0164", leaderboardMode);
     }
@@ -30,24 +30,29 @@ class $modify(ModGJGameLevel, GJGameLevel) {
         auto oldPercent = m_normalPercent.value();
         GJGameLevel::savePercentage(percent, isPracticeMode, clicks, attempts, isChkValid);
 
-        if (percent <= oldPercent) return;
+        // we don't want this running when the percent is 100%, because this function runs before coins are calculated
+        if (percent >= 100 || percent <= oldPercent) return;
 
         updateLeaderboard();
     }
 };
 
 class $modify(PlayLayer) {
-    // platformer levels don't use GJGameLevel::savePercentage
-    // i wasn't able to find which method saves platformer time, but PlayLayer::levelComplete works
+    // since savePercentage runs before coins are calculated, on level complete we hook this function instead
     $override
     void levelComplete() {
+        auto oldPercent = m_level->m_normalPercent.value();
         auto oldBestTime = m_level->m_bestTime;
         PlayLayer::levelComplete();
 
         bool isNewBestTime = m_level->m_bestTime < oldBestTime;
         if (oldBestTime == 0) isNewBestTime = true;
 
-        if (!m_level->isPlatformer() || !isNewBestTime) return;
+        // i couldn't find a good way to determine if the player collected more coins,
+        // so we always update the leaderboard when beating non-platformer levels
+        // but this shouldn't be a big deal, since you don't beat levels often enough to cause issues like rate limiting
+
+        if (m_level->isPlatformer() && !isNewBestTime) return;
 
         static_cast<ModGJGameLevel*>(m_level)->updateLeaderboard();
     }
@@ -60,8 +65,9 @@ class $modify(GameLevelManager) {
         if (httpType != GJHttpType::GetLevelLeaderboard) return;
 
         // m_storedLevels holds all cached level-related data (levels, comments, leaderboards, etc)
-        // m_timerDict holds timestamps for when the data was last fetched
-        // deleting these forces a refetch
+        // m_timerDict holds timestamps for when the data was last fetched. deleting these forces a refetch
+
+        // doing this prevents the leaderboard from erroneously showing "1 second ago" despite beating the level earlier than that
 
         m_storedLevels->removeObjectForKey(tag);
         m_timerDict->removeObjectForKey(tag);
