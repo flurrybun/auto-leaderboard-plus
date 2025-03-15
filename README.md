@@ -1,3 +1,5 @@
+> This mod is no longer being updated, as all its improvements have been [merged into M336G's AutoLeaderboard](https://github.com/M336G/AutoLeaderboard/pull/2) mod.
+
 # AutoLeaderboard+
 
 This is a [Geometry Dash](https://store.steampowered.com/app/322170/Geometry_Dash/) mod made with [Geode](https://geode-sdk.org/). After installing Geode, search for this mod in the in-game mod browser and click install.
